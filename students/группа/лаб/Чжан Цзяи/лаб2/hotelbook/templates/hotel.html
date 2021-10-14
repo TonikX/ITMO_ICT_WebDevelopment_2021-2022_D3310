@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hotel</title>
+</head>
+
+<body>
+    {% if user.is_authenticated %}
+    <div class="hotel-card">
+    <h1>Hotel:</h1>
+    <h3>{{ hotel.name_hotel }} </h3>
+    <div>
+        <p><b>Owner:</b> {{ hotel.owner_hotel }}</p>
+        <p><b>Address:</b> {{ hotel.add_hotel }}</p>
+        <p><b>Description:</b> {{ hotel.des_hotel }}</p>
+    </div>
+        <hr>
+    <div>
+        {% for room in rooms %}
+        <p>
+            <b>Number room:</b>
+            <a href="/hotel/{{ room.id }}">{{ room.id }}</a>
+        <hr>
+        </p>
+        {% endfor %}
+    </div>
+    {% else %}
+    To get in the page must <a href="register">Register</a> or <a href="login">Login</a>.
+    {% endif %}
+    </div>
+</body>
+
+</html>
