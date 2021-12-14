@@ -8,15 +8,15 @@
       >
       искать доклад группы {{ id }}
       </v-btn>
-    <div class="blue darken-4 text-center">
+    </div>
+    <div class="blue darken-4">
       <span class="white--text">Средний балл: {{ report.Средний_балл }}</span>
     </div>
-    <div class="amber darken-4 text-center">
+    <div class="amber darken-4">
       <span class="white--text">Обшие люди: {{ report.Обшие_люди }}</span>
     </div>
-    <div class="shades black text-center">
+    <div class="shades black">
       <span class="white--text">руководитель: {{ report.руководитель }}</span>
-    </div>
     </div>
   </div>
 </template>
@@ -54,3 +54,4 @@ export default {
 <style scoped>
 
 </style>
+
