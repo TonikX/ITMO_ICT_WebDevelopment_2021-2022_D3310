@@ -1,137 +1,259 @@
 <template>
-  <div>
-    <v-form @submit="submit()">
-      <v-text-field
-      v-model="first_name"
-      :counter="10"
-      label="Имя"
-      required
-      ></v-text-field>
-      <v-text-field
-      v-model="last_name"
-      :counter="10"
-      label="Фамиля"
-      required
-      ></v-text-field>
-      <v-text-field
-      v-model="b_date"
-      :counter="10"
-      label="Время начала"
-      required
-      ></v-text-field>
-      <v-text-field
-      v-model="e_date"
-      :counter="10"
-      label="Время закончила"
-      required
-      ></v-text-field>
-      <v-text-field
-      v-model="office"
-      :counter="10"
-      label="кабинет"
-      ></v-text-field>
-      <v-select
-      v-model="subject"
-      :items="subjects"
-      label="Дисциплина"
-      required
-      ></v-select>
-      <v-btn
-        color="success"
-        class="mr-4"
-        type="submit"
+  <v-data-table
+    :headers="headers"
+    :items="teachers"
+    item-key="id"
+    class="elevation-1"
+  >
+    <template v-slot:top>
+      <v-toolbar
+        flat
       >
-        Сохранить
-      </v-btn>
-      <v-btn
-        color="error"
-      class="mr-4"
-      @click="reset"
-      >
-      Сбросить
-      </v-btn>
-    </v-form>
-    <div v-for="teacher in teachers" :key="teacher.id">
-      <div class="shades black text-center">
-        <span class="white--text">first name: {{ teacher.first_name }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">last name: {{ teacher.last_name }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">b_date:  {{ teacher.b_date }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">e_date: {{ teacher.e_date }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">office: {{ teacher.office }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">subject: {{ teacher.subject }}</span>
-      </div>
-      <v-btn
-        color="error"
-      class="mr-4"
-      @click="deleteTeacher(teacher.id)"
-      >
-      Удалить
-      </v-btn>
-      <div>
-        <v-form @submit="update(teacher.id)">
-          <v-text-field
-          v-model="first_name"
-          :counter="10"
-          label="Имя"
-          required
-          ></v-text-field>
-          <v-text-field
-          v-model="last_name"
-          :counter="10"
-          label="Фамиля"
-          required
-          ></v-text-field>
-          <v-text-field
-          v-model="b_date"
-          :counter="10"
-          label="Время начала"
-          required
-          ></v-text-field>
-          <v-text-field
-          v-model="e_date"
-          :counter="10"
-          label="Время закончила"
-          required
-          ></v-text-field>
-          <v-text-field
-          v-model="office"
-          :counter="10"
-          label="кабинет"
-          ></v-text-field>
-          <v-select
-          v-model="subject"
-          :items="subjects"
-          label="Дисциплина"
-          required
-          ></v-select>
+        <v-toolbar-title>Список Приподаватель</v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
+        <v-spacer>
           <v-btn
-            color="success"
-            class="mr-4"
-            type="submit"
+              color="primary"
+              dark
+              class="mb-2"
+              @click="addNewTeacher"
           >
-            Обновить
+              Новый приподаватель
           </v-btn>
-          <v-btn
-            color="error"
-          class="mr-4"
-          @click="reset"
-          >
-          Сбросить
-          </v-btn>
-        </v-form>
-      </div>
-    </div>
-  </div>
+        </v-spacer>
+        <v-dialog
+          v-model="dialog"
+          max-width="500px"
+        >
+          <v-card>
+            <v-card-title>
+              <span class="text-h5"></span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="first_name"
+                      :counter="10"
+                      label="Имя"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="last_name"
+                      :counter="10"
+                      label="Фамиля"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="b_date"
+                      :counter="10"
+                      label="Время начала"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="e_date"
+                      :counter="10"
+                      label="Время закончила"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="office"
+                      :counter="10"
+                      label="кабинет"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="subject"
+                      :items="subjects"
+                      label="Дисциплина"
+                      required
+                    ></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+              color="blue darken-1"
+              text
+              @click="cancel"
+              >
+              Не
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="submit"
+              >
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-btn
+        small
+        @click="addTeacher"
+      >
+        Обновить
+      </v-btn>
+      <v-dialog
+      max-width="500px"
+      v-model="show"
+      >
+        <v-card>
+          <v-card-title>
+            <span class="text-h5"></span>
+          </v-card-title>
+
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="first_name"
+                    :counter="10"
+                    label="Имя"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="last_name"
+                    :counter="10"
+                    label="Фамиля"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="b_date"
+                    :counter="10"
+                    label="Время начала"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="e_date"
+                    :counter="10"
+                    label="Время закончила"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-text-field
+                    v-model="office"
+                    :counter="10"
+                    label="кабинет"
+                  ></v-text-field>
+                </v-col>
+                <v-col
+                  cols="12"
+                  sm="6"
+                  md="4"
+                >
+                  <v-select
+                    v-model="subject"
+                    :items="subjects"
+                    label="Дисциплина"
+                    required
+                  ></v-select>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="cancel"
+            >
+              Не
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="update(item.id)"
+            >
+              Сохранить
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-btn
+        small
+        @click="deleteTeacher(item.id)"
+      >
+        удалить
+      </v-btn>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -139,7 +261,24 @@ export default {
   name: 'Teacher',
   data () {
     return {
-      teachers: {},
+      show: false,
+      dialog: false,
+      headers: [
+        {
+          text: 'Приподаватель',
+          align: 'start',
+          sortable: false,
+          value: 'id'
+        },
+        { text: 'Имя', value: 'first_name' },
+        { text: 'Фамилия', value: 'last_name' },
+        { text: 'Дисциплина', value: 'subject' },
+        { text: 'Время начала', value: 'b_date' },
+        { text: 'Время закончила', value: 'e_date' },
+        { text: 'Кабинет', value: 'office' },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ],
+      teachers: [],
       first_name: '',
       last_name: '',
       b_date: '',
@@ -155,6 +294,16 @@ export default {
     }
   },
   methods: {
+    addNewTeacher () {
+      this.dialog = true
+    },
+    cancel () {
+      this.show = false
+      this.dialog = false
+    },
+    addTeacher () {
+      this.show = true
+    },
     submit () {
       window.event.preventDefault()
       const data = {
