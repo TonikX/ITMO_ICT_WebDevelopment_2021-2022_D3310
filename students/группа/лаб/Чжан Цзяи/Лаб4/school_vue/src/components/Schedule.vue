@@ -1,135 +1,261 @@
 <template>
-  <div>
-    <v-form @submit="submit()">
-      <v-select
-        v-model="teacher"
-        :items="teachers"
-        label="Приподаватель"
-        required
-      ></v-select>
-      <v-select
-        v-model="day"
-        :items="days"
-        label="День"
-        required
-      ></v-select>
-      <v-select
-        v-model="subject"
-        :items="subjects"
-        label="Дисциплина"
-        required
-      ></v-select>
-      <v-select
-        v-model="group"
-        :items="groups"
-        label="Группа"
-        required
-      ></v-select>
-      <v-select
-        v-model="classroom"
-        :items="classrooms"
-        label="Аудитория"
-        required
-      ></v-select>
-      <v-text-field
-      v-model="time"
-      :counter="15"
-      label="время"
-      ></v-text-field>
-      <v-btn
-        color="success"
-        class="mr-4"
-        type="submit"
+  <v-data-table
+    :headers="headers"
+    :items="schedules"
+    item-key="id"
+    class="elevation-1"
+  >
+    <template v-slot:top>
+      <v-toolbar
+        flat
       >
-        Сохранить
-      </v-btn>
-      <v-btn
-      color="error"
-      class="mr-4"
-      @click="reset"
-      >
-      Сбросить
-      </v-btn>
-    </v-form>
-    <div v-for="schedule in schedules" :key="schedule.id">
-      <div class="shades black text-center">
-        <span class="white--text">Time: {{ schedule.time }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">Day: {{ schedule.day }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">Subject: {{ schedule.subject }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">Group: {{ schedule.group }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">Teacher: {{ schedule.teacher }}</span>
-      </div>
-      <div class="shades black text-center">
-        <span class="white--text">Classroom: {{ schedule.classroom }}</span>
-      </div>
-      <v-btn
-        color="error"
-      class="mr-4"
-      @click="deleteSchedule(schedule.id)"
-      >
-      Удалить
-      </v-btn>
-      <v-form @submit="update(schedule.id)">
-        <v-select
-          v-model="teacher"
-          :items="teachers"
-          label="Приподаватель"
-          required
-        ></v-select>
-        <v-select
-          v-model="day"
-          :items="days"
-          label="День"
-          required
-        ></v-select>
-        <v-select
-          v-model="subject"
-          :items="subjects"
-          label="Дисциплина"
-          required
-        ></v-select>
-        <v-select
-          v-model="group"
-          :items="groups"
-          label="Группа"
-          required
-        ></v-select>
-        <v-select
-          v-model="classroom"
-          :items="classrooms"
-          label="Аудитория"
-          required
-        ></v-select>
-        <v-text-field
-        v-model="time"
-        :counter="15"
-        label="время"
-        ></v-text-field>
-        <v-btn
-          color="success"
-          class="mr-4"
-          type="submit"
+        <v-toolbar-title>Список Расписания</v-toolbar-title>
+        <v-divider
+          class="mx-4"
+          inset
+          vertical
+        ></v-divider>
+        <v-spacer>
+            <v-btn
+              color="primary"
+              dark
+              class="mb-2"
+              @click="addNewSchedule"
+            >
+              Новое Расписание
+            </v-btn>
+        </v-spacer>
+        <v-dialog
+          v-model="dialog"
+          max-width="500px"
         >
-          Сохранить
-        </v-btn>
-        <v-btn
-          color="error"
-        class="mr-4"
-        @click="reset"
-        >
-        Сбросить
-        </v-btn>
-      </v-form>
-    </div>
-  </div>
+          <v-card>
+            <v-card-title>
+              <span class="text-h5"></span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="time"
+                      :counter="10"
+                      label="Время"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="subject"
+                      :items="subjects"
+                      label="Дисциплина"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="day"
+                      :items="days"
+                      label="День"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="group"
+                      :items="groups"
+                      label="Группа"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="teacher"
+                      :items="teachers"
+                      label="Приподаватель"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="classroom"
+                      :items="classrooms"
+                      label="Аудитория"
+                      required
+                    ></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+              color="blue darken-1"
+              text
+              @click="cancel"
+              >
+              Не
+              </v-btn>
+              <v-btn
+                color="blue darken-1"
+                text
+                @click="submit"
+              >
+                Сохранить
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
+    <template v-slot:item.actions="{ item }">
+      <v-btn
+        small
+        @click="addSchedule"
+      >
+        Обновить
+      </v-btn>
+      <v-dialog
+      max-width="500px"
+      v-model="show"
+      >
+        <v-card>
+            <v-card-title>
+              <span class="text-h5"></span>
+            </v-card-title>
+
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-text-field
+                      v-model="time"
+                      :counter="10"
+                      label="Время"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="subject"
+                      :items="subjects"
+                      label="Дисциплина"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="day"
+                      :items="days"
+                      label="День"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="group"
+                      :items="groups"
+                      label="Группа"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="teacher"
+                      :items="teachers"
+                      label="Приподаватель"
+                      required
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                    cols="12"
+                    sm="6"
+                    md="4"
+                  >
+                    <v-select
+                      v-model="classroom"
+                      :items="classrooms"
+                      label="Аудитория"
+                      required
+                    ></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="cancel"
+            >
+              Не
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="update(item.id)"
+            >
+              Сохранить
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <v-btn
+        small
+        @click="deleteSchedule(item.id)"
+      >
+        удалить
+      </v-btn>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -148,7 +274,24 @@ export default {
   },
   data () {
     return {
-      schedules: {},
+      show: false,
+      dialog: false,
+      headers: [
+        {
+          text: 'Расписание',
+          align: 'start',
+          sortable: false,
+          value: 'id'
+        },
+        { text: 'Время', value: 'time' },
+        { text: 'День', value: 'day' },
+        { text: 'Дисциплина', value: 'subject' },
+        { text: 'Группа', value: 'group' },
+        { text: 'Приподаватель', value: 'teacher' },
+        { text: 'Аудитория', value: 'classroom' },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ],
+      schedules: [],
       time: '',
       group: null,
       groups: [{ text: 'Выберите группу', value: null, disabled: true }],
@@ -175,6 +318,16 @@ export default {
     }
   },
   methods: {
+    addNewSchedule () {
+      this.dialog = true
+    },
+    cancel () {
+      this.show = false
+      this.dialog = false
+    },
+    addSchedule () {
+      this.show = true
+    },
     submit () {
       window.event.preventDefault()
       const data = {
@@ -223,7 +376,6 @@ export default {
         const group = {}
         group.value = groups[i].id
         group.text = groups[i].number
-
         this.groups.push(group)
       }
     },
@@ -232,7 +384,6 @@ export default {
         const teacher = {}
         teacher.value = teachers[i].id
         teacher.text = teachers[i].first_name
-
         this.teachers.push(teacher)
       }
     },
@@ -241,7 +392,6 @@ export default {
         const classroom = {}
         classroom.value = classrooms[i].id
         classroom.text = classrooms[i].number
-
         this.classrooms.push(classroom)
       }
     },
@@ -291,5 +441,5 @@ export default {
 </script>
 
 <style scoped>
-
 </style>
+
