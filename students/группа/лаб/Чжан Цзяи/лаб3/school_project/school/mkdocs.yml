@@ -1,0 +1,41 @@
+site_name: Описание сервиса "Школа"
+nav:
+ - Home: index.md
+ - Api:
+     -Teacher:
+       -"teachers/list": api/teacher/teacher_list.md
+       -"teachers/int": api/teacher/teacher_one.md
+       -"teachers/update/int": api/teacher/teacher_update.md
+       -"teachers/new": api/teacher/teacher_create.md
+       -"teachers/count": api/teacher/teacher_count.md
+     -Group:
+       -"groups/list": api/group/group_list.md
+       -"groups/int": api/group/group_one.md
+       -"groups/update/int": api/group/group_update.md
+       -"groups/new": api/group/group_create.md
+     -Classroom:
+       -"classrooms/list": api/classroom/classroom_list.md
+       -"classrooms/int": api/classroom/classroom_one.md
+       -"classrooms/update/int": api/classroom/classroom_update.md
+       -"classrooms/new": api/classroom/classroom_create.md
+       -"classrooms/count": api/classroom/classroom_count.md
+     -Schedule:
+       -"schedules/list": api/schedule/schedule_list.md
+       -"schedules/int": api/schedule/schedule_one.md
+       -"schedules/update/int": api/schedule/schedule_update.md
+       -"schedules/new": api/schedule/schedule_create.md
+     -Student:
+       -"students/list": api/student/student_list.md
+       -"students/int": api/student/student_one.md
+       -"students/update/int": api/student/student_update.md
+       -"students/new": api/student/student_create.md
+       -"students/count": api/student/student_count.md
+     -Report:
+       -"report/int": api/report.md
+
+
+
+
+
+theme:
+ name: material

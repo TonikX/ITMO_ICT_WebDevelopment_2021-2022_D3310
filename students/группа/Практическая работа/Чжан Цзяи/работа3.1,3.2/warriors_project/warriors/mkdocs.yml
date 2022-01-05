@@ -1,0 +1,14 @@
+site_name: Описание сервиса "Войны"
+nav:
+ - Home: index.md
+ - User:
+     -"auth/users/": user/register.md
+     -"auth/token/login/": user/authorize.md
+     -"auth/users/me/": user/update.md
+ - Api:
+     - "warriors/list/": api/warriors_skill.md
+     - "warriors/list/": api/warriors_profession.md
+     - "warriors/<int:pk>/": api/warrior_skillandprofession.md
+
+theme:
+ name: material
