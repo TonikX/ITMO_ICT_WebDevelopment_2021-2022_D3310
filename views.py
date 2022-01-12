@@ -1,128 +1,92 @@
+from .serializers import *
+from rest_framework import generics
 from django.shortcuts import render
-from django.shortcuts import HttpResponse, HttpResponseRedirect
-from .models import *
-from .form import UserForm, CommentForm
-from django.views.generic import ListView
-from django.core.paginator import Paginator
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
-from django.views.generic import CreateView
-
+from .serializers import *
+from rest_framework import generics
 # Create your views here.
-class HotelView(ListView):
-    model = Hotel
+class UserListAPIView(generics.ListAPIView):
+    serializer_class = NewUserSerializer
+    queryset = User.objects.all()
 
-    def get(self, request):
-        hotel = Hotel.objects.get(pk=1)
-        rooms = Room.objects.all()
-        paginator = Paginator(rooms, 5)
-        number = request.GET.get('page')
-        object = paginator.get_page(number)
 
-        return render(request, 'hotel.html', {'hotel': hotel, 'rooms': rooms, 'object': object})
+class UserInfoAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = NewUserSerializer
 
-@login_required
-def room_info(request, room_id):
-    user = User.objects.get(id=request.user.id)
-    try:
-        room = Room.objects.get(pk=room_id)
-    except Room.DoesNotExist:
-        pass
 
-    try:
-        comments = Comment.objects.filter(room=room_id).all()
-        paginator = Paginator(comments, 1)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-    except Comment.DoesNotExist:
-        pass
+class UserCreateAPIView(generics.CreateAPIView):
+    serializer_class = NewUserSerializer
+    queryset = User.objects.all()
 
-    if request.POST.get('user'):
-        user_id = int(request.POST.get('user'))
 
-    form = CommentForm(request.POST)
-    if form.is_valid():
-        new_form = form.save(commit=False)
-        new_form.post = form
-        new_form.room_id = room_id
-        new_form.user_id = user_id
-        new_form.save()
+class ChickenListAPIView(generics.ListAPIView):
+    serializer_class = ChickenRelatedSerializer
+    queryset = Chicken.objects.all()
 
-        return HttpResponseRedirect('/hotel/{}/'.format(room_id))
 
-    return render(request, 'room.html',
-                  {'room': room, 'form': form, 'page_obj': page_obj})
+class ChickenInfoAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Chicken.objects.all()
+    serializer_class = ChickenRelatedSerializer
 
-def register(request):
-    registered = False
 
-    if request.method == 'POST':
+class ChickenCreateAPIView(generics.CreateAPIView):
+    serializer_class = ChickenSerializer
+    queryset = Chicken.objects.all()
 
-        create_user_form = UserForm(data=request.POST)
 
-        if create_user_form.is_valid():
+class BreedListAPIView(generics.ListAPIView):
+    serializer_class = BreedSerializer
+    queryset = Breed.objects.all()
 
-            user = create_user_form.save()
-            user.set_password(user.password)
-            user.save()
-            registered = True
 
-        else:
+class BreedInfoAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Breed.objects.all()
+    serializer_class = BreedSerializer
 
-            print(create_user_form.errors)
-    else:
 
-        create_user_form = UserForm()
+class BreedCreateAPIView(generics.CreateAPIView):
+    serializer_class = BreedSerializer
+    queryset = Breed.objects.all()
 
-    return render(request, 'register.html', {'create_user_form': create_user_form, 'registered': registered})
 
-def user_login(request):
-    if request.method == 'POST':
+class ServiceListAPIView(generics.ListAPIView):
+    serializer_class = ServiceRelatedSerializer
+    queryset = Service.objects.all()
 
-        username = request.POST.get('username')
-        password = request.POST.get('password')
 
-        user = authenticate(username=username, password=password)
+class ServiceInfoAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Service.objects.all()
+    serializer_class = ServiceSerializer
 
-        if user:
 
-            if user.is_active:
-                login(request, user)
-                return HttpResponseRedirect('/hotel/')
-        else:
-            return HttpResponse("Incorrect username or password")
+class ServiceCreateAPIView(generics.CreateAPIView):
+    serializer_class = ServiceSerializer
+    queryset = Service.objects.all()
 
-    else:
-        return render(request, 'login.html', {})
 
-def order_room(request, room_id):
-    user = User.objects.get(id=request.user.id)
-    try:
-        room = Room.objects.get(pk=room_id)
-    except Room.DoesNotExist:
-        pass
-    if room.order_user == user:
-        message = 'You already order this room'
-    elif room.order_user is not None and room.order_user != user:
-        message = 'You can not order this room'
-    else:
-        message = 'You successfully order this room'
-        room.order_user = User.objects.get(id=request.user.id)
-        room.save()
-    return render(request, 'order.html', {'message': message})
+class CellListAPIView(generics.ListAPIView):
+    serializer_class = CellSerializer
+    queryset = Cell.objects.all()
 
-def cancel_room(request, room_id):
-    user = User.objects.get(id=request.user.id)
-    try:
-        room = Room.objects.get(pk=room_id)
-    except Room.DoesNotExist:
-        pass
-    if room.order_user != user:
-        message = 'You did not order this room'
-    elif room.order_user == user:
-        message = 'You successfully cancel this room'
-        room.order_user = None
-        room.save()
-    return render(request, 'cancel.html', {'message': message})
+
+class CellInfoAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Cell.objects.all()
+    serializer_class = CellSerializer
+
+
+class CellCreateAPIView(generics.CreateAPIView):
+    serializer_class = CellSerializer
+    queryset = Cell.objects.all()
+
+
+class ServiceNestedAPIView(generics.ListAPIView):
+    serializer_class = ServiceNestedSerializer
+    queryset = Service.objects.all()
+
+
+class ChickenNestedAPIView(generics.ListAPIView):
+    serializer_class = ChickenNestedSerializer
+    queryset = Chicken.objects.all()
+
 
 

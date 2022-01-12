@@ -1,6 +1,10 @@
-# Register your models here.
-from django.contrib import admin
 from .models import *
-admin.site.register(Hotel)
-admin.site.register(Room)
+from django.contrib import admin
 
+admin.site.register(User)
+admin.site.register(Row)
+admin.site.register(Cell)
+admin.site.register(Tsekh)
+admin.site.register(Breed)
+admin.site.register(Chicken)
+admin.site.register(Service)
