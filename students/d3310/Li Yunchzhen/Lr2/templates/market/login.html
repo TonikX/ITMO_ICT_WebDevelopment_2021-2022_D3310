@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="{% static '/imgs/logo.svg' %}">
+  <title>&pi;-most popular 2ed-hand market🪙</title>
+  <link rel="stylesheet" type="text/css" href="{% static '/semantic/dist/semantic.min.css' %}">
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+  <script src="{%static '/semantic/dist/semantic.min.js' %}"></script>
+    <style type="text/css">
+        body {
+          background-color: #DADADA;
+        }
+        body > .grid {
+          height: 100%;
+        }
+        .column {
+          max-width: 450px;
+        }
+        </style>
+  </head>
+  <body>
+      <div class="ui middle aligned center aligned grid">
+          <div class="column">
+          <img src="{% static '/imgs/logo.svg' %}" class="img" style="height: 200px; width: 200px;">
+            <form class="ui large form" name="login_form" method="post">
+              {% csrf_token %}
+              <div class="ui raised segment">
+              <h2 class="ui teal header">
+                  <div class="content" style="color: gray;">
+                      &pi;-most popular 2ed-hand market
+                  </div>
+              </h2>
+                <div class="field">
+                  <div class="ui left icon input">
+                    <i class="male icon"></i>
+                    <input type="text" name="username" placeholder="Username">
+                  </div>
+                </div>
+                <div class="field">
+                  <div class="ui left icon input">
+                    <i class="key icon"></i>
+                    <input type="password" name="password" placeholder="Password">
+                  </div>
+                </div>
+                <input type='submit' class="ui fluid large teal submit button" value="Login">
+              </div>
+              </form>
+              
+            <div class="ui message">
+              New to us? <a href="/market/register/">Sign Up</a>
+            </div>
+          </div>
+        </div>
+  </body>

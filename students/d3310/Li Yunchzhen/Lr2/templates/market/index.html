@@ -1,0 +1,304 @@
+{%load static%}
+
+<!DOCTYPE html>
+<head>
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="{% static '/imgs/logo.svg' %}">
+  <title>&pi;-most popular 2ed-hand market🪙</title>
+  <link rel="stylesheet" type="text/css" href="{% static '/semantic/dist/semantic.min.css' %}">
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+    <script src="{% static 'infinite.js' %}" defer></script>
+  <script src="{%static '/semantic/dist/semantic.min.js' %}"></script>
+    <style type="text/css">
+        html {
+            font-size: 16px;
+        }
+        body {
+          background-color: #DADADA;
+        }
+        body > .grid {
+          height: 100%;
+        }
+        #profile{
+            height: 3rem;  
+            margin-top: 6rem;
+        }
+        #part1{
+            margin-top: 6rem;
+        }
+
+        .useravatar {
+            border-radius: 50%;
+            height: 8rem;
+            width: 8rem;
+        }
+
+        .useravatar-small{
+            border-radius: 50%;
+            height: 3rem;
+            width: 3rem;
+        }
+        /* .column{
+            border: 1px solid pink;
+        } */
+        </style>
+    <script>
+        $(document).ready(function(){
+            let checkout_count = 0
+            let item_list = new Set()
+            $("input:checkbox").on('change',function(){
+                if($(this).prop('checked')){
+                    checkout_count += parseFloat($(this).val())
+                    console.log(checkout_count)
+                    $("#checkoutbtn").next().attr("value",checkout_count + " ₽")
+                    item_list.add($(this).attr("id"))
+                }
+                if($(this).prop('checked') != true){
+                    checkout_count -= parseFloat($(this).val())
+                    console.log(checkout_count)
+                    $("#checkoutbtn").next().attr("value",checkout_count + " ₽")
+                    item_list.delete($(this).attr("id"))
+                }
+            })
+            $("#checkoutbtn").on('click',function(){
+                result = Array.from(item_list).toString()
+                $.ajax({
+                    type:'post',
+                    url:'/market/checkout',
+                    data:{"itemlist":result},
+                })
+                location.reload()
+            })
+            $.ajax({
+                type:"get",
+                url:'/market/showliked',
+                success:function(result) {
+                    console.log(result['data'])
+                    let labels = $(".itemid_label")
+                    labels.each(function() {
+                        if(jQuery.inArray($(this).html(),result['data']) !== -1){
+                            console.log($(this).html())
+                            $(this).next().addClass("red")
+                            $(this).next().next().addClass("red")
+                        }
+                    })
+                }
+            })
+            $('#editbtn').on('click',function(){
+                $("#savebtn").attr("disabled",false)
+                let dis = 'disabled'
+                console.log(1)
+                $('#phoneform').removeAttr(dis)
+                $('#addressform').removeAttr(dis)
+                $('#citizenshipform').removeClass(dis)
+                for(let i = 1; i<=6;i++){
+                $("#p"+i).removeClass(dis)
+            }
+            })
+            $('.tabular .item').on('click', function(){
+            var tab = $(this).attr('data-tab')
+            $('.tabular .item').removeClass('active')
+            $('.tab').removeClass('active')
+            $("[data-tab="+tab+"]").addClass('active')
+            })
+            $('#outbtn').on('click',function(){
+                window.open('/market/logout','_self')
+            })
+            $("#swbtn").on('click',function(){
+                window.open('/market/switchuser/','_self')
+            })
+            $('.likebutton').on('click',function(){
+                let isLiked = $(this).hasClass('red')
+                if(!isLiked){
+                    $(this).addClass('red')
+                    want = $(this).next()
+                    want.addClass('red')
+                    nwant = parseInt(want.html())
+                    want.html(nwant+1)
+                    console.log(want.html())
+                    $.ajax({
+                        type: "post",
+                        url:'/market/addwant',
+                        data:{"like":true,"itemid":$(this).prev().html()},
+                    })
+                }else{
+                    $(this).removeClass('red')
+                    want = $(this).next()
+                    want.removeClass('red')
+                    nwant = parseInt(want.html())
+                    want.html(nwant-1)
+                    $.ajax({
+                        type:"post",
+                        url:"/market/removewant",
+                        data:{"like":false, "itemid":$(this).prev().html()}
+                    })
+                }
+            })
+
+        })
+    </script>
+</head>
+<body>
+    <div class="ui top fixed menu" id="navbar" >
+        <div class="item"><img src="{% static '/imgs/logo.svg' %}"></div>
+        <div class="item right menu">
+            <div class="ui buttons">
+                <div class="ui animated button green" tabindex="0" id="swbtn">
+                    <div class="visible content">Switch</div>
+                    <div class="hidden content"><i class="ui right arrow icon"></i></div>
+                </div>
+                <!-- <button class="ui green button" id="login">Login</button> -->
+                <div class="or"></div>
+                <div class="ui animated button blue" tabindex="0" id="outbtn">
+                    <div class="visible content">Log out</div>
+                    <div class="hidden content"><i class="ui right arrow icon"></i></div>
+                </div>
+                <!-- <button class="ui blue button" id="Sign">Sign Up</button> -->
+              </div>
+        </div>
+    </div>
+    <div class="ui container" id="part1">
+        <div class="ui top attached tabular menu" >
+            <a class="item active" data-tab="profile"><i class="ui user circle icon"></i>Profile</a>
+            <a class="item" data-tab="Cart"><i class="ui shopping cart icon"></i>Want to buy</a>
+            <a class="item" data-tab="WTS"><i class="ui shopping clipboard icon"></i>Want to sell</a>
+        </div>
+        <div class="ui bottom attached tab active segment" data-tab="profile">
+            <!-- TODO: PROFILE LAYOUT -->
+            <div class="ui stackable two column grid center aligned">
+                <div class="six wide column">
+                    <br><br>
+                    <a href="#">
+                        <img src={{uavatar}} class="useravatar">
+                        <!-- <img src="./resource/testavatar1.png" style="z-index: 1;" class="useravatar" id='myavatar'> -->
+                    </a>
+                    <p>Hello!</p>
+                    <p>{{uname}}</p>
+                </div>
+                <div class="ten wide column">
+                    <form class="ui form medium" name="info_form" method="post">
+                        {% csrf_token %}
+                        <h4 class="ui header">
+                            <div class="content">
+                                Infomations
+                            </div>
+                        </h4>
+                        <div class="field">
+                            <div class="ui left labeled icon input">
+                                <div class="ui label"><i class="mobile icon"></i></div>
+                                <input type="text" name="phone" placeholder="phone" id="phoneform" disabled value={{uphone}}>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui left labeled icon input">
+                                <div class="ui label"><i class="building icon"></i></div>
+                                <input type="text" name="address" placeholder="address" id="addressform" disabled value={{uaddress}}>
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <div class="ui stackable two column grid">
+                            <div class="column">
+                                <!-- <button class="ui compact button violet" id="editbtn"><i class="edit icon"></i>Edit</button> -->
+                                <a class="ui compact button violet" id="editbtn"><i class="edit icon"></i>Edit</a>
+                            </div>
+                            <div class="column">
+                                <button type="submit" id="savebtn" disabled="true" class="ui compact button green" ><i class="save icon"></i>Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="ui bottom attached tab segment raised" data-tab="Cart">
+            <h4 class="ui header">
+                <div class="content">
+                    Your cart
+                </div>
+            </h4>
+            <table class="ui celled table">
+                <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Seller</th>
+                  <th>Price</th>
+                  <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% include 'market/rows.html' with item_wanted=item_wanted%}
+                </tbody>
+              </table>
+              <div class="ui container right aligned">
+                <div class="ui left action input">
+                    <button class="ui teal labeled icon button" id="checkoutbtn">
+                      <i class="cart icon"></i>
+                      Checkout
+                    </button>
+                    <input type="text" value="0 ₽" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="ui bottom attached tab segment raised" data-tab="WTS">
+            <form class="ui form medium" name="sell-f" action="/market/addItem/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h4 class="ui header">
+                    <div class="content">
+                        What you want to sell?
+                    </div>
+                </h4>
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">Item name</div>
+                        <input type="text" placeholder="Item name" name="item_name">
+                    </div>  
+                </div>
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">Upload Pic</div>
+                        <input type="file" accept="image/*" name="item_pic">
+                    </div>  
+                </div>
+                <div class="field">
+                    <label>Description</label>
+                    <textarea rows="3" name="item_description"></textarea>
+                </div>
+                <div class="field">
+                    <div class="ui labeled input">
+                        <div class="ui label">Set price</div>
+                        <input type="text" placeholder="Price" name="item_price">
+                    </div>  
+                </div>
+                <div class="field">
+                        <input class="ui button green" type="submit">
+                    </div>  
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="ui container" style="margin-top: 20px;">
+        <div class="ui stackable three column grid segment">
+            {% include 'market/cards.html' with items=items%}
+            
+        </div>
+        <div class="ui three column grid">
+            <div class="ui left aligned column">
+                {% if items.has_previous %}
+                <a class="ui button" href="?page={{ items.previous_page_number }}">Prev</a>
+                {% endif %}
+            </div>
+            <div class="ui center aligned column">
+                <span>Current: {{ items.number }}/{{ items.paginator.num_pages }} Page</span>
+            </div>
+            <div class="ui right aligned  column">
+                {% if items.has_next %}
+                <a class="ui button" href="?page={{ items.next_page_number }}">Next</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <a href="./login.html"></a>
+</body>

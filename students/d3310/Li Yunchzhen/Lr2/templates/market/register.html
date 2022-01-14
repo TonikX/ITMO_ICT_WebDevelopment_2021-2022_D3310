@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="{% static '/imgs/logo.svg' %}">
+  <title>&pi;-most popular 2ed-hand market🪙</title>
+  <link rel="stylesheet" type="text/css" href="{% static '/semantic/dist/semantic.min.css' %}">
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+  <script src="{%static '/semantic/dist/semantic.min.js' %}"></script>
+    <style type="text/css">
+        body {
+          background-color: #DADADA;
+        }
+        body > .grid {
+          height: 100%;
+        }
+        .column {
+          max-width: 450px;
+        }
+        </style>
+    <script>
+      $(document).ready(function(){
+        var res = 'hyperborean'
+        $("#ava_seed").attr('value',res)
+        $('#gen_avatar').on('click',function(){
+        var str = ['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+        var res = "";
+        for(var i = 0; i < 18 ; i ++) {
+         var id = Math.ceil(Math.random()*35);
+         res += str[id];
+        }
+        $("#ava").attr('src',"https://api.multiavatar.com/"+res+".svg")
+        $("#ava_seed").attr('value',res)
+        })
+      })
+    </script>
+</head>
+<body>
+    <div class="ui middle aligned center aligned grid">
+        <div class="column">
+        <img src="{% static '/imgs/logo.svg' %}" class="img" style="height: 200px; width: 200px;">
+          <form class="ui large form" method="post">
+            {% csrf_token %}
+            <div class="ui raised segment">
+            <h2 class="ui teal header">
+                <div class="content" style="color: gray;">
+                    &pi;-most popular 2ed-hand market
+                </div>
+            </h2>
+            <img width="64px" height="64px" id="ava" src="https://api.multiavatar.com/hyperborean.svg">
+            <div class="field">
+              <input type="text" style="display: none;" name="avatar_seed" id="ava_seed">
+            </div>
+            <button type="button" id="gen_avatar" class="ui labeled icon button">
+              <i class="random icon"></i>
+              Roll Avatar
+            </button>
+            <br><br>
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="male icon"></i>
+                  <input type="text" name="username" placeholder="Please input your username">
+                </div>
+              </div>
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="key icon"></i>
+                  <input type="password" name="password" id='passwd' placeholder="Password">
+                </div>
+              </div>
+              <input type='submit' class="ui fluid large teal submit button" value="Sign Up">
+            </div>
+            </form>
+            <div class="ui message">
+              Already have account?<a href="/market/login/">Log in</a>
+            </div>
+          </div>
+        </div>
+      </div>
+</body>
