@@ -1,0 +1,39 @@
+<style>
+.item-picture{
+    object-fit: contain;
+}
+</style>
+
+<div class="column">
+    <div class="ui card segment container center aligned item-content">
+        <div class="content">
+          <img class="ui avatar image floated left" src="https://api.multiavatar.com/{{item.seller.avatar}}.svg"> {{item.seller.username}}
+        </div>
+        <div class="image">
+          <img src={{item.pic}} class="ui center aligned item-picture">
+        </div>
+        <div class="content">
+            {{item.name}}
+        </div>
+        <div class="content">
+            {{item.description}}
+        </div>
+        <div class="content">
+            {{item.price}} ₽
+        </div>
+        <div class="content">
+            <div class="stac"></div>
+            <div class="ui labeled button" tabindex="0">
+                <i style="display: none;" class="itemid_label">{{item.id}}</i>
+                <div class="ui button likebutton">
+                  <i class="heart icon"></i> Like
+                </div>
+                <a class="ui basic left pointing label">
+                    {{item.wanted}}
+                </a>
+            </div>
+            <!-- <i class="heart like icon likebutton"></i>
+            {{item.wanted}} Want to buy -->
+        </div>
+    </div>
+</div>

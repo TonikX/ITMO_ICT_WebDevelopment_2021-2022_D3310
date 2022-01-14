@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<head>
+  <title>⚠️&pi;-market:Page Lost</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="{% static '/imgs/logo.svg' %}">
+  <link rel="stylesheet" type="text/css" href="{% static '/semantic/dist/semantic.min.css' %}">
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+  <script src="{%static '/semantic/dist/semantic.min.js' %}"></script>
+    <style type="text/css">
+        body {
+          background-color: #DADADA;
+        }
+        body > .grid {
+          height: 100%;
+        }
+        .column {
+          max-width: 450px;
+        }
+        img {
+          height: 13rem;
+          width:  13rem;
+        }
+        </style>
+</head>
+<body>
+    <div class="ui middle aligned center aligned grid">
+      <div class="column">
+        <img src="{% static '/imgs/logo.svg' %}">
+        <h2 class="ui  header">
+          <div class="ui content">
+            Maybe Darth Vader destroyed our server🤔<br>try something else?
+          </div>
+        </h2>
+      </div>
+    </div>
+</body>
