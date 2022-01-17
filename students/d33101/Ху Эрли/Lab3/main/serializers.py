@@ -15,6 +15,12 @@ class TaskSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = Task
 		fields = "__all__"
+		
+class CriterionSerializer(serializers.ModelSerializer):
+
+	class Meta:
+		model = Criterion
+		fields = "__all__"
 
 
 # сериализаторы для классов
