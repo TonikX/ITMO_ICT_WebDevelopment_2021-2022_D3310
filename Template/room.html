@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="hotel-card">
+        <hr>
+    <div>
+        <p><b>Type:</b> {{ room.get_type_room_display }}</p>
+        <p><b>Price:</b> {{ room.price_room }}</p>
+        <p><b>Capacity:</b> {{ room.cap_room }}</p>
+        <p><b>Facilities:</b> {{ room.fac_room }}</p>
+        <a href="order">Order</a>       <a href="cancel">Cancel</a>
+        <hr>
+    </div>
+    </div>
+{% if perms.hotel.add_comment %}
+    <div class="hotel-card-2"><h1>Add comment:</h1>
+        <form action="/hotel/{{ room.id }}/" method="post">
+            {% csrf_token %}
+            <input type="text" name="user" hidden value="{{ user.id }}">
+            {{ form|crispy }}
+            <input type="submit" name="" value="Upload">
+        </form>
+    </div>
+{% else %}
+    <p>To comment,you need order the room</p>
+{% endif %}
+    <hr>
+    {% for comment in page_obj %}
+        {# Each "comment" is a Contact model object. #}
+        {{ comment.full_name|upper }}<br>
+        <div class="hotel-card-3"><h1>Comment:</h1>
+        <div>
+            <p><b>Point:</b> {{ comment.point }}/10</p>
+            <p><b>Date:</b> <br>{{ comment.b_date }} - {{ comment.e_date }}</p>
+            <p><b>User: {{ comment.user }}</b></p>
+            <p>{{ comment.text_comment }}</p>
+        </div>
+        <hr>
+        </div>
+    {% endfor %}
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+</div>
+</body>
+{% endblock %}
