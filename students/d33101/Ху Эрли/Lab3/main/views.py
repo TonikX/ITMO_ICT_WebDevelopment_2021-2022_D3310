@@ -33,6 +33,13 @@ class TaskDetialView(generics.RetrieveAPIView):
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
 
+class CriterionListView(APIView):
+
+    def get(self, request):
+        criterions = Criterion.objects.all()
+        serializer = CriterionSerializer(criterions, many=True)
+
+        return Response(serializer.data)
 
 class TaskExecutorsListView(APIView):
 
