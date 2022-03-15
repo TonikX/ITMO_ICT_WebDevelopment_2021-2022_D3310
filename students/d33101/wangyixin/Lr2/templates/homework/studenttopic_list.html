@@ -1,0 +1,13 @@
+<html><head><title>ta'b'le</title></head>
+<h2 style="text-align: center">Информационная форма студента</h2>
+<table border=1 align="center">
+<tr> <th>студент</th><th>Оценка</th>
+    </tr>
+{% for student in object_list %}
+<tr>
+<td>{{ student.user }}</td>
+<td>{{ student.mark }}</td>
+{% endfor %}
+</table>
+<a href="/index/">Get back</a>
+</html>
