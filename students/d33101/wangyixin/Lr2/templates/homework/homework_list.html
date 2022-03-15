@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homework list</title>
+</head>
+
+<body>
+  <span>Homeworks</span>
+  <ul>
+	{% for i in object_list %}
+	<li><p><strong>subject:</strong>{{ i.subject }}</p>
+  	<p><strong>teacher:</strong> {{ i.teacher }}</p>
+    <p><strong>desc:</strong> {{ i.desc }}</p>
+    <p><strong>time_start:</strong> {{ i.time_start }}</p>
+    <p><strong>time_end:</strong> {{ i.time_end }}</p>
+    <p><strong>info:</strong> {{ i.info}}</p>
+    <p><a href="/homework/{{ i.id }}/create/">Do homework</a></p>
+	</li>
+	{% empty %}
+	<li>No Homeworks yet.</li>
+	{% endfor %}
+  </ul>
+  <a href="/index/">Get back</a>
+</body>
+
+</html>
